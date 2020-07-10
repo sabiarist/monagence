@@ -2,6 +2,9 @@
     "ausi/slug-generator": {
         "version": "v1.1.0"
     },
+    "dealerdirect/phpcodesniffer-composer-installer": {
+        "version": "v0.7.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -17,11 +20,17 @@
     "doctrine/cache": {
         "version": "1.10.2"
     },
+    "doctrine/coding-standard": {
+        "version": "8.1.0"
+    },
     "doctrine/collections": {
         "version": "1.6.6"
     },
     "doctrine/common": {
         "version": "2.13.3"
+    },
+    "doctrine/data-fixtures": {
+        "version": "1.4.3"
     },
     "doctrine/dbal": {
         "version": "2.10.2"
@@ -43,6 +52,18 @@
     },
     "doctrine/doctrine-cache-bundle": {
         "version": "1.4.0"
+    },
+    "doctrine/doctrine-fixtures-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "fc52d86631a6dfd9fdf3381d0b7e3df2069e51b3"
+        },
+        "files": [
+            "./src/DataFixtures/AppFixtures.php"
+        ]
     },
     "doctrine/doctrine-migrations-bundle": {
         "version": "2.2",
@@ -114,6 +135,9 @@
     "phpdocumentor/type-resolver": {
         "version": "1.3.0"
     },
+    "phpstan/phpdoc-parser": {
+        "version": "0.4.4"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -139,6 +163,21 @@
         },
         "files": [
             "./config/packages/sensio_framework_extra.yaml"
+        ]
+    },
+    "slevomat/coding-standard": {
+        "version": "6.3.10"
+    },
+    "squizlabs/php_codesniffer": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "0dc9cceda799fd3a08b96987e176a261028a3709"
+        },
+        "files": [
+            "./phpcs.xml.dist"
         ]
     },
     "swiftmailer/swiftmailer": {
