@@ -42,7 +42,7 @@ class PropertyType extends AbstractType
     {
         $choices = Property::HEAT;
         $output = [];
-        foreach ($choices as $k => $v){
+        foreach ($choices as $k => $v) {
             $output[$v] = $k;
         }
         return $output;

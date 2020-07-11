@@ -116,7 +116,8 @@ class Property
         return $this;
     }
 
-    public function getSlug():string {
+    public function getSlug():string
+    {
         return (new SlugGenerator)->generate($this->title);
     }
 
@@ -197,7 +198,8 @@ class Property
         return $this;
     }
     //recuperer le type de chauffage utilisé
-    public function getHeatType():string {
+    public function getHeatType():string
+    {
         return self::HEAT[$this->heat];
     }
 

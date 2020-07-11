@@ -2,13 +2,18 @@
 namespace App\Controller;
 
 use App\Entity\Property;
+use App\Entity\PropertySearch;
+use App\Form\PropertySearchType;
 use App\Repository\PropertyRepository;
 use Doctrine\Common\Persistence\ObjectManager;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PropertyController extends AbstractController {
+class PropertyController extends AbstractController
+{
     /**
      * @var PropertyRepository
      */
@@ -26,9 +31,12 @@ class PropertyController extends AbstractController {
 
     /**
      * @Route("/biens", name="property.index")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
      * @return Response
      */
-    public function index():Response{
+    public function index(PaginatorInterface $paginator, Request $request):Response
+    {
         /*$property = new Property();
         $property->setTitle('Mon premier bien')
             ->setAddress('22 Rue Mermoz')
@@ -59,11 +67,35 @@ class PropertyController extends AbstractController {
         dump($property);*/
 
         //Modifier entité
-       /* $property[0]->setSold(true);
-        $this->em->flush();*/
+        /* $property[0]->setSold(true);
+         $this->em->flush();*/
+        //$properties = $this->repository->findAllVisible();
 
+        ###### Creer un Search Engine pour les proprietes ######
+        //Creer une entité qui va représenter notre recherche
+        //Entity/PropertySearch.php
+        //Creer un formulaire
+        //php bin/console make:form Form/PropertySearchType.php
+        // modifier builder, resolver et creer function prefixe
+        //Gerer le traitement sur le controller
+        //creer new objet PropertySearch() et new form PropertySearchType
+        //forme execute la requette et on envoi le form a la vue
+        //on affiche le form dans la vue et on va
+        //dans PropertyRepository pour modifier la requete findAllVisibleQuery
+        //il prend l'entité PropertySearch et renvoi un Query
+        $search = new PropertySearch();
+        $form = $this->createForm(PropertySearchType::class, $search);
+        $form->handleRequest($request);
+
+        $properties = $paginator->paginate(
+            $this->repository->findAllVisibleQuery($search),
+            $request->query->getInt('page', 1),
+            6
+        );
         return $this->render('property/index.html.twig', [
-            'current_menu' => 'properties'
+            'current_menu' => 'properties',
+            'properties' => $properties,
+            'form' => $form->createView()
         ]);
     }
 
@@ -74,10 +106,11 @@ class PropertyController extends AbstractController {
      * @return Response
      */
     //Affiche la propriete avec son slug et son id dans le lien
-    public function show(Property $property, string $slug):Response{
+    public function show(Property $property, string $slug):Response
+    {
         //verifie si les slug correspondent Si non corrige le bon et fait une redirect permanante sur le lien canonique
-        if ($property->getSlug() !== $slug){
-            return $this->redirectToRoute('property.show',[
+        if ($property->getSlug() !== $slug) {
+            return $this->redirectToRoute('property.show', [
                'id' =>$property->getId(),
                 'slug' =>$property->getSlug()
             ], 301);

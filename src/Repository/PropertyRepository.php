@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Property;
+use App\Entity\PropertySearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
@@ -21,20 +22,43 @@ class PropertyRepository extends ServiceEntityRepository
         parent::__construct($registry, Property::class);
     }
 
-
     /**
-     * @return Property[]
+     * @param PropertySearch $search
+     * @return Query
      */
-    public function findAllVisible():array {
-        return $this->findVisibleQuery()
-            ->getQuery()
-            ->getResult();
+    public function findAllVisibleQuery(PropertySearch $search):Query
+    {
+        $query = $this->findVisibleQuery();
+
+        if ($search->getMaxPrice()) {
+            $query = $query
+                ->andwhere('p.price <= :maxprice')
+                ->setParameter('maxprice', $search->getMaxPrice());
+        }
+        if ($search->getMinSurcace()) {
+            $query = $query
+                ->andwhere('p.surface >= :minsurface')
+                ->setParameter('minsurface', $search->getMinSurcace());
+        }
+
+        return $query->getQuery();
     }
 
     /**
      * @return Property[]
      */
-    public function findLatest():array {
+    /*public function findAllVisible():array
+    {
+        return $this->findVisibleQuery()
+            ->getQuery()
+            ->getResult();
+    }*/
+
+    /**
+     * @return Property[]
+     */
+    public function findLatest():array
+    {
         return $this->findVisibleQuery()
             ->setMaxResults(4)
             ->getQuery()
@@ -47,7 +71,8 @@ class PropertyRepository extends ServiceEntityRepository
     /**
      * @return QueryBuilder
      */
-    private function findVisibleQuery():QueryBuilder{
+    private function findVisibleQuery():QueryBuilder
+    {
         return $this->createQueryBuilder('p')
             ->where('p.sold = false');
     }
@@ -79,5 +104,4 @@ class PropertyRepository extends ServiceEntityRepository
         ;
     }
     */
-
 }
